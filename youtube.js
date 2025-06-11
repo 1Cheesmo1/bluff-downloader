@@ -2,11 +2,17 @@ const YTDlpWrap = require("yt-dlp-wrap").default;
 const path = require("path");
 
 const ytDlp = new YTDlpWrap();
-ytDlp.setBinaryPath(path.join(__dirname, "yt-dlp.exe"));
+// On Render, we don't need to set a binary path because it's installed globally
+// But we'll leave this for local development
+if (process.env.NODE_ENV !== 'production') {
+    ytDlp.setBinaryPath(path.join(__dirname, "yt-dlp.exe"));
+}
 
 async function analyzeVideo(url) {
   try {
-    const metadata = await ytDlp.getVideoInfo(url);
+    // --- THE FIX IS HERE ---
+    // We add the --force-ipv4 flag to the command
+    const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
     return {
       id: metadata.id,
       title: metadata.title,
@@ -20,18 +26,17 @@ async function analyzeVideo(url) {
   }
 }
 
-// --- UPDATED FUNCTION ---
-// It now accepts a progressCallback to report real-time progress
 async function downloadVideo(url, quality, progressCallback) {
   return new Promise(async (resolve, reject) => {
     try {
-      const metadata = await ytDlp.getVideoInfo(url);
+      const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
       const outputTemplate = path.join(__dirname, "temp", `${metadata.id}.mp4`);
 
       const args = [
         url,
+        "--force-ipv4", // --- AND ALSO HERE ---
         "--ffmpeg-location",
-        path.join(__dirname, "ffmpeg.exe"),
+        process.env.NODE_ENV === 'production' ? 'ffmpeg' : path.join(__dirname, "ffmpeg.exe"),
         "-f",
         "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
         "--no-warnings",
@@ -42,7 +47,6 @@ async function downloadVideo(url, quality, progressCallback) {
 
       const ytDlpProcess = ytDlp.exec(args);
 
-      // This now calls the callback function with the progress percentage
       ytDlpProcess.on("progress", (progress) => {
         progressCallback(progress.percent);
       });
