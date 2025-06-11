@@ -1,0 +1,17 @@
+# Dependencies
+/node_modules
+
+# Temp files
+/temp
+
+# Executables
+yt-dlp.exe
+ffmpeg.exe
+
+# Environment variables
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

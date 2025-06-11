@@ -1,0 +1,221 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* --- NEW: Orange Color Scheme --- */
+  --primary-orange: #f39c12;
+  --primary-orange-hover: #d35400;
+  --background: #ffffff;
+  --surface: #f8f9fa;
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --border: #e1e8ed;
+}
+
+[data-theme="dark"] {
+  --background: #1a1a1a;
+  --surface: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border: #404040;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  /* --- UPDATED --- */
+  border-bottom: 2px solid var(--primary-orange);
+}
+
+h1 {
+  font-size: 2.5rem;
+  /* --- UPDATED --- */
+  color: var(--primary-orange);
+}
+
+.theme-toggle {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.theme-toggle:hover {
+  /* --- UPDATED --- */
+  border-color: var(--primary-orange);
+}
+
+.converter-box {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.converter-box h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.url-input {
+  flex-grow: 1;
+  padding: 15px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  background: var(--background);
+  color: var(--text-primary);
+}
+.url-input:focus {
+  outline: none;
+  /* --- UPDATED --- */
+  border-color: var(--primary-orange);
+}
+
+.analyze-btn,
+.download-btn {
+  padding: 15px 30px;
+  /* --- UPDATED --- */
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.analyze-btn:hover,
+.download-btn:hover {
+  /* --- UPDATED --- */
+  background: var(--primary-orange-hover);
+}
+.analyze-btn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+.result-panel {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.video-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--background);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.video-info img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.video-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.options-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.option {
+  flex-grow: 1;
+}
+.option label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.option select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.progress-section {
+  margin-top: 20px;
+}
+.progress-text {
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  /* --- UPDATED --- */
+  background: var(--primary-orange);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.features-section {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 30px;
+  border: 1px solid var(--border);
+}
+.features-section h3 {
+  margin-bottom: 15px;
+}
+.features-section ul {
+  list-style-position: inside;
+  color: var(--text-secondary);
+}
+.features-section li {
+  margin-bottom: 10px;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+}

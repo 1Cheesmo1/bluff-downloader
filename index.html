@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- NEW: Updated Title -->
+    <title>Bluff Downloader</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <!-- NEW: Updated Header -->
+        <h1>Bluff Downloader</h1>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+      </header>
+
+      <main>
+        <div class="converter-box">
+          <h2>Convert YouTube Video</h2>
+          <div class="input-group">
+            <input
+              type="url"
+              id="youtubeUrl"
+              placeholder="Paste YouTube URL here..."
+              class="url-input"
+            />
+            <button id="analyzeBtn" class="analyze-btn">Analyze</button>
+          </div>
+          <div id="result-panel" class="result-panel" style="display: none"></div>
+          <div class="progress-section" id="progressSection" style="display: none">
+            <p class="progress-text" id="progressText">Preparing download...</p>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW: Updated Features Section -->
+        <div class="features-section">
+          <h3>Main features include</h3>
+          <ul>
+            <li>It's Almost Fast. (Still working on it)</li>
+            <li>Simple UI, No Bullshit, Just Works.</li>
+            <li>Download videos up to 1 hour long.</li>
+            <li>Strict Zero log policy - We don't care what you download.</li>
+            <li>Files are auto-deleted from the server after 30 minutes.</li>
+          </ul>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          <strong>Note:</strong> This tool is for personal use only. Please
+          respect copyright laws.
+        </p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
