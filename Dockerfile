@@ -4,12 +4,15 @@ FROM node:18-slim
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Install Python, pip, and ffmpeg using the Linux package manager
-# yt-dlp needs Python to run
-RUN apt-get update && apt-get install -y python3 python3-pip ffmpeg
+# Install dependencies: wget to download, python3 to run, and ffmpeg
+# We no longer need pip3
+RUN apt-get update && apt-get install -y wget python3 ffmpeg
 
-# Use pip to install the latest version of yt-dlp
-RUN pip3 install -U yt-dlp
+# --- THIS IS THE NEW, MORE RELIABLE METHOD ---
+# Use wget to download the latest yt-dlp binary directly into a system path
+# Then, make it executable for everyone
+RUN wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp && \
+    chmod a+rx /usr/local/bin/yt-dlp
 
 # Copy your package.json and package-lock.json
 COPY package*.json ./
