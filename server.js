@@ -14,18 +14,10 @@ const PORT = process.env.PORT || 3003;
 app.use(cors());
 app.use(express.json());
 
-// This line serves all static files (HTML, CSS, JS, PNGs) from the root directory.
-// It MUST be here.
-app.use(express.static(__dirname));
-
-// This route serves the main index.html file for the root URL.
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+// --- API ROUTES ARE NOW DEFINED FIRST ---
+// This ensures they are matched before the static file server.
 
 const downloadProgress = new Map();
-const tempDir = path.join(__dirname, "temp");
-fs.mkdir(tempDir, { recursive: true }).catch(console.error);
 
 app.post("/api/analyze", async (req, res) => {
   try {
@@ -49,6 +41,21 @@ app.get("/api/progress/:id", (req, res) => {
   if (!progress) return res.status(404).json({ error: "Download not found" });
   res.json(progress);
 });
+
+// --- STATIC FILE SERVING IS NOW DEFINED LAST ---
+// This serves all our frontend files (HTML, CSS, JS, PNGs)
+app.use(express.static(__dirname));
+
+// This is a catch-all route that sends index.html for any other GET request.
+// This helps with refreshing the page on different routes in the future.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
+// --- The processDownload function remains the same ---
+const tempDir = path.join(__dirname, "temp");
+fs.mkdir(tempDir, { recursive: true }).catch(console.error);
 
 async function processDownload(downloadId, url, format, quality) {
   const update = (progress, message) => downloadProgress.set(downloadId, { status: "processing", progress, message });
