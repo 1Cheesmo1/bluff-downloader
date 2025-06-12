@@ -6,7 +6,7 @@ const ytDlp = new YTDlpWrap();
 // --- THIS IS THE FIX ---
 // If we are NOT in production (i.e., we are on your local PC),
 // then we tell the library where to find the .exe file.
-// On Render, this code will be skipped, and it will use the globally installed yt-dlp.
+// On Render, this code is skipped, and it uses the globally installed yt-dlp.
 if (process.env.NODE_ENV !== 'production') {
     ytDlp.setBinaryPath(path.join(__dirname, "yt-dlp.exe"));
 }
@@ -34,6 +34,8 @@ async function downloadVideo(url, quality, progressCallback) {
     try {
       const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4', '--user-agent', userAgent]);
       const outputTemplate = path.join(__dirname, "temp", `${metadata.id}.mp4`);
+      
+      // This also uses the environment to choose the correct ffmpeg path
       const ffmpegPath = process.env.NODE_ENV === 'production' ? 'ffmpeg' : path.join(__dirname, "ffmpeg.exe");
 
       const args = [
