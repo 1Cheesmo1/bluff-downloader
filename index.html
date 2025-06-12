@@ -3,16 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- NEW: Updated Title -->
     <title>Bluff Downloader</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="stylesheet" href="styles.css" />
+
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
   <body>
     <div class="container">
       <header>
-        <!-- NEW: Updated Header -->
         <h1>Bluff Downloader</h1>
-        <button class="theme-toggle" id="themeToggle">🌙</button>
+        <button class="theme-toggle" id="themeToggle">
+          <img id="themeIcon" src="/moon.png" alt="Theme toggle icon" />
+        </button>
       </header>
 
       <main>
@@ -36,7 +44,7 @@
           </div>
         </div>
 
-        <!-- NEW: Updated Features Section -->
+        <!-- Main Features Section -->
         <div class="features-section">
           <h3>Main features include</h3>
           <ul>
@@ -45,6 +53,17 @@
             <li>Download videos up to 1 hour long.</li>
             <li>Strict Zero log policy - We don't care what you download.</li>
             <li>Files are auto-deleted from the server after 30 minutes.</li>
+          </ul>
+        </div>
+
+        <!-- UPDATED: Update Log now uses the same class -->
+        <div class="features-section">
+          <h3>Update Log</h3>
+          <p style="margin-bottom: 15px;"><strong>v1.0 - The Launch</strong></p>
+          <ul>
+            <li>Initial release.</li>
+            <li>Switched to yt-dlp for robust downloading.</li>
+            <li>UI polished with a new orange/black theme.</li>
           </ul>
         </div>
       </main>

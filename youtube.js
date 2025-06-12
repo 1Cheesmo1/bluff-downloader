@@ -2,16 +2,15 @@ const YTDlpWrap = require("yt-dlp-wrap").default;
 const path = require("path");
 
 const ytDlp = new YTDlpWrap();
-// On Render, we don't need to set a binary path because it's installed globally
-// But we'll leave this for local development
+// On Render (production), yt-dlp is installed globally, so we don't set a path.
+// On local, we use the .exe file.
 if (process.env.NODE_ENV !== 'production') {
     ytDlp.setBinaryPath(path.join(__dirname, "yt-dlp.exe"));
 }
 
 async function analyzeVideo(url) {
   try {
-    // --- THE FIX IS HERE ---
-    // We add the --force-ipv4 flag to the command
+    // The --force-ipv4 flag helps bypass server blocks
     const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
     return {
       id: metadata.id,
@@ -32,11 +31,17 @@ async function downloadVideo(url, quality, progressCallback) {
       const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
       const outputTemplate = path.join(__dirname, "temp", `${metadata.id}.mp4`);
 
+      // --- THE FINAL FIX IS HERE ---
+      // On Render, the command is just 'ffmpeg'. On local, it's the full path.
+      const ffmpegPath = process.env.NODE_ENV === 'production'
+        ? 'ffmpeg'
+        : path.join(__dirname, "ffmpeg.exe");
+
       const args = [
         url,
-        "--force-ipv4", // --- AND ALSO HERE ---
+        "--force-ipv4",
         "--ffmpeg-location",
-        process.env.NODE_ENV === 'production' ? 'ffmpeg' : path.join(__dirname, "ffmpeg.exe"),
+        ffmpegPath, // Use the correct path based on environment
         "-f",
         "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
         "--no-warnings",

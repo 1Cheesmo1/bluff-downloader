@@ -1,6 +1,6 @@
 class YouTubeConverter {
   constructor() {
-    this.API_BASE_URL = "/api";
+    this.API_BASE_URL = "/api"; // This is correct for deployment
     this.initializeElements();
     this.initializeEventListeners();
     this.initializeTheme();
@@ -9,6 +9,7 @@ class YouTubeConverter {
   initializeElements() {
     this.elements = {
       themeToggle: document.getElementById("themeToggle"),
+      themeIcon: document.getElementById("themeIcon"),
       youtubeUrl: document.getElementById("youtubeUrl"),
       analyzeBtn: document.getElementById("analyzeBtn"),
       resultPanel: document.getElementById("result-panel"),
@@ -27,16 +28,17 @@ class YouTubeConverter {
   }
 
   initializeTheme() {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    this.elements.themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+    const theme = localStorage.getItem('theme') || 'dark';
+    // Show opposite icon of current theme
+    this.elements.themeIcon.src = theme === 'dark' ? '/sun.png' : '/moon.png';
   }
 
   toggleTheme() {
     const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
-    this.elements.themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
+    // Show opposite icon of new theme
+    this.elements.themeIcon.src = newTheme === 'dark' ? '/sun.png' : '/moon.png';
   }
 
   async analyzeVideo() {
@@ -94,24 +96,20 @@ class YouTubeConverter {
         <div class="option">
           <label for="qualitySelect">Quality:</label>
           <select id="qualitySelect">
-            <!-- Options will be added by updateQualityOptions() -->
           </select>
         </div>
       </div>
       <button id="downloadBtn" class="download-btn">Start Download</button>
     `;
-    // Re-add event listeners for the new elements
     document.getElementById("downloadBtn").addEventListener("click", () => this.startDownload());
     document.getElementById("formatSelect").addEventListener("change", () => this.updateQualityOptions());
-    // Populate quality options for the first time
     this.updateQualityOptions();
   }
 
-  // --- THIS FUNCTION IS NOW FIXED ---
   updateQualityOptions() {
     const format = document.getElementById("formatSelect").value;
     const qualitySelect = document.getElementById("qualitySelect");
-    qualitySelect.innerHTML = ""; // Clear old options
+    qualitySelect.innerHTML = "";
 
     const qualities = format === "mp4"
       ? ["best", "1080p", "720p", "480p"]
@@ -120,7 +118,7 @@ class YouTubeConverter {
     qualities.forEach((q) => {
       const option = document.createElement("option");
       option.value = q;
-      option.textContent = q.replace('k', 'kbps'); // Make it look nice
+      option.textContent = q.replace('k', 'kbps');
       qualitySelect.appendChild(option);
     });
   }
