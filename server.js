@@ -5,22 +5,28 @@ const fs = require("fs").promises;
 require("dotenv").config();
 
 const { analyzeVideo, downloadVideo } = require("./youtube.js");
-// --- IMPORT THE NEW DELETE FUNCTION ---
 const { uploadToGoogleDrive, deleteFromGoogleDrive } = require("./googleDrive.js");
 const { convertToMp3 } = require("./converter.js");
 
 const app = express();
-const PORT = process.env.PORT || 3003; // Using 3003 as we established
+const PORT = process.env.PORT || 3003;
 
 app.use(cors());
 app.use(express.json());
+
+// This line serves all static files (HTML, CSS, JS, PNGs) from the root directory.
+// It MUST be here.
 app.use(express.static(__dirname));
+
+// This route serves the main index.html file for the root URL.
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const downloadProgress = new Map();
 const tempDir = path.join(__dirname, "temp");
 fs.mkdir(tempDir, { recursive: true }).catch(console.error);
 
-// ... (The /api/analyze and /api/progress routes are unchanged) ...
 app.post("/api/analyze", async (req, res) => {
   try {
     const videoInfo = await analyzeVideo(req.body.url);
@@ -44,20 +50,13 @@ app.get("/api/progress/:id", (req, res) => {
   res.json(progress);
 });
 
-
-// --- THE MAIN UPDATED FUNCTION ---
 async function processDownload(downloadId, url, format, quality) {
   const update = (progress, message) => downloadProgress.set(downloadId, { status: "processing", progress, message });
   try {
     update(5, "Fetching video info...");
-    
-    // --- REAL-TIME PROGRESS ---
-    // We pass a function to downloadVideo that updates the progress map
     const videoPath = await downloadVideo(url, quality, (percent) => {
-      // We scale the percentage to fit within the 10% to 80% range of the progress bar
       update(10 + (percent * 0.7), `Downloading... ${Math.floor(percent)}%`);
     });
-
     update(80, "Processing file...");
     let finalPath = videoPath;
     if (format === "mp3") {
@@ -65,25 +64,18 @@ async function processDownload(downloadId, url, format, quality) {
       finalPath = await convertToMp3(videoPath);
       await fs.unlink(videoPath);
     }
-
     update(90, "Uploading to Google Drive...");
     const driveFile = await uploadToGoogleDrive(finalPath, format);
-
     downloadProgress.set(downloadId, {
       status: "completed",
       progress: 100,
       message: "Download complete!",
       downloadUrl: driveFile.webViewLink,
     });
-
-    // --- AUTO-DELETE LOGIC ---
-    // Schedule the file to be deleted in 30 minutes (1,800,000 milliseconds)
     setTimeout(() => {
       deleteFromGoogleDrive(driveFile.id);
     }, 30 * 60 * 1000);
-
     await fs.unlink(finalPath);
-    // We no longer need to delete the progress map entry here
   } catch (error) {
     console.error("Processing Error:", error);
     downloadProgress.set(downloadId, { status: "error", message: error.message });

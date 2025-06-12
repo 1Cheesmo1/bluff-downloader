@@ -2,16 +2,17 @@ const YTDlpWrap = require("yt-dlp-wrap").default;
 const path = require("path");
 
 const ytDlp = new YTDlpWrap();
-// On Render (production), yt-dlp is installed globally, so we don't set a path.
-// On local, we use the .exe file.
 if (process.env.NODE_ENV !== 'production') {
     ytDlp.setBinaryPath(path.join(__dirname, "yt-dlp.exe"));
 }
 
+// A realistic browser User-Agent string
+const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36';
+
 async function analyzeVideo(url) {
   try {
-    // The --force-ipv4 flag helps bypass server blocks
-    const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
+    // Add --user-agent to the command
+    const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4', '--user-agent', userAgent]);
     return {
       id: metadata.id,
       title: metadata.title,
@@ -28,26 +29,17 @@ async function analyzeVideo(url) {
 async function downloadVideo(url, quality, progressCallback) {
   return new Promise(async (resolve, reject) => {
     try {
-      const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4']);
+      const metadata = await ytDlp.getVideoInfo([url, '--force-ipv4', '--user-agent', userAgent]);
       const outputTemplate = path.join(__dirname, "temp", `${metadata.id}.mp4`);
-
-      // --- THE FINAL FIX IS HERE ---
-      // On Render, the command is just 'ffmpeg'. On local, it's the full path.
-      const ffmpegPath = process.env.NODE_ENV === 'production'
-        ? 'ffmpeg'
-        : path.join(__dirname, "ffmpeg.exe");
+      const ffmpegPath = process.env.NODE_ENV === 'production' ? 'ffmpeg' : path.join(__dirname, "ffmpeg.exe");
 
       const args = [
         url,
         "--force-ipv4",
-        "--ffmpeg-location",
-        ffmpegPath, // Use the correct path based on environment
-        "-f",
-        "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
-        "--no-warnings",
-        "-o",
-        outputTemplate,
-        "--progress",
+        "--user-agent", userAgent, // Add the disguise here too
+        "--ffmpeg-location", ffmpegPath,
+        "-f", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b",
+        "--no-warnings", "-o", outputTemplate, "--progress",
       ];
 
       const ytDlpProcess = ytDlp.exec(args);
@@ -55,21 +47,12 @@ async function downloadVideo(url, quality, progressCallback) {
       ytDlpProcess.on("progress", (progress) => {
         progressCallback(progress.percent);
       });
-
-      ytDlpProcess.on("error", (error) => {
-        reject(new Error("The download process failed."));
-      });
-
-      ytDlpProcess.on("close", () => {
-        resolve(outputTemplate);
-      });
+      ytDlpProcess.on("error", (error) => reject(new Error("The download process failed.")));
+      ytDlpProcess.on("close", () => resolve(outputTemplate));
     } catch (error) {
       reject(error);
     }
   });
 }
 
-module.exports = {
-  analyzeVideo,
-  downloadVideo,
-};
+module.exports = { analyzeVideo, downloadVideo };
