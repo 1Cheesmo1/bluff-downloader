@@ -5,7 +5,7 @@ const fs = require("fs").promises;
 require("dotenv").config();
 
 const { analyzeVideo, downloadVideo } = require("./youtube.js");
-const { uploadToGoogleDrive, deleteFromGoogleDrive } = require("./googleDrive.js");
+const { uploadToGoogleDrive, deleteFromGoogleDrive } = require("./googledrive.js");
 const { convertToMp3 } = require("./converter.js");
 
 const app = express();
