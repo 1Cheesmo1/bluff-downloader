@@ -5,8 +5,9 @@ FROM node:18-slim AS build
 # Set the working directory in the container.
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to leverage Docker's build cache.
+# Copy package files and the postinstall script to leverage Docker's build cache.
 COPY package*.json ./
+COPY postinstall.js ./
 
 # Install dependencies. This includes the static binaries for ffmpeg and yt-dlp.
 # We use 'npm ci' for faster, more reliable builds in CI/CD environments.
