@@ -1,15 +1,18 @@
 # Dependencies
 /node_modules
 
+# Environment variables
+.env
+
+# Local binaries (downloaded by postinstall script)
+/bin
+
 # Temp files
 /temp
 
-# Executables
+# Windows Executables (for local development)
 yt-dlp.exe
 ffmpeg.exe
-
-# Environment variables
-.env
 
 # Logs
 npm-debug.log*

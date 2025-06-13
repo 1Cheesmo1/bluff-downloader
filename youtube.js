@@ -2,7 +2,9 @@ const YTDlpWrap = require("yt-dlp-wrap").default;
 const path = require("path");
 const ffmpegPath = require("ffmpeg-static");
 
-const ytDlp = new YTDlpWrap();
+// Use the yt-dlp binary downloaded by our postinstall script.
+const ytDlpBinaryPath = path.join(__dirname, 'bin', 'yt-dlp');
+const ytDlp = new YTDlpWrap(ytDlpBinaryPath);
 
 const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36';
 
