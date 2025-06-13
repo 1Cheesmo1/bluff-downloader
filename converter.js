@@ -1,5 +1,9 @@
 const ffmpeg = require("fluent-ffmpeg");
+const ffmpegPath = require("ffmpeg-static");
 const path = require("path");
+
+// Tell fluent-ffmpeg where to find the ffmpeg binary from the ffmpeg-static package.
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 function convertToMp3(videoPath) {
   return new Promise((resolve, reject) => {
