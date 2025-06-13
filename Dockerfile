@@ -19,6 +19,10 @@ COPY . .
 # Use a clean, minimal Node.js image for the final production environment.
 FROM node:18-slim AS production
 
+# Install Python, which is a dependency for yt-dlp to run.
+# We also clean up the apt cache to keep the image size down.
+RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory.
 WORKDIR /usr/src/app
 
