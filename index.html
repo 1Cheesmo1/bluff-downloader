@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bluff Downloader</title>
-    <!-- UPDATED: Path is now lowercase -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="stylesheet" href="styles.css" />
 
     <script>
-      (function() {
-        const theme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
+      // This script runs instantly to prevent the theme from flashing on load.
+      (function () {
+        const theme = localStorage.getItem("theme") || "dark";
+        document.documentElement.setAttribute("data-theme", theme);
       })();
     </script>
   </head>
@@ -20,13 +20,64 @@
       <header>
         <h1>Bluff Downloader</h1>
         <button class="theme-toggle" id="themeToggle">
-          <!-- UPDATED: Path is now lowercase -->
           <img id="themeIcon" src="/moon.png" alt="Theme toggle icon" />
         </button>
       </header>
 
       <main>
-        <!-- ... (The rest of the main content is unchanged) ... -->
+        <div class="converter-box">
+          <h2>Convert YouTube Video</h2>
+          <div class="input-group">
+            <input
+              type="url"
+              id="youtubeUrl"
+              placeholder="Paste YouTube URL here..."
+              class="url-input"
+            />
+            <button id="analyzeBtn" class="analyze-btn">Analyze</button>
+          </div>
+          <div
+            id="result-panel"
+            class="result-panel"
+            style="display: none"
+          ></div>
+          <div
+            class="progress-section"
+            id="progressSection"
+            style="display: none"
+          >
+            <p class="progress-text" id="progressText">
+              Preparing download...
+            </p>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Features Section -->
+        <div class="features-section">
+          <h3>Main features include</h3>
+          <ul>
+            <li>It's Almost Fast. (Still working on it)</li>
+            <li>Simple UI, No Bullshit, Just Works.</li>
+            <li>Download videos up to 1 hour long.</li>
+            <li>Strict Zero log policy - We don't care what you download.</li>
+            <li>Files are auto-deleted from the server after 30 minutes.</li>
+          </ul>
+        </div>
+
+        <!-- Update Log Section -->
+        <div class="features-section">
+          <h3>Update Log</h3>
+          <p><strong>v1.0 - The Launch</strong></p>
+          <ul>
+            <li>Initial release. (Still working on it)</li>
+            <li>Switched to yt-dlp for robust downloading.</li>
+            <li>Added auto-delete from Google Drive after 30 mins.</li>
+            <li>UI polished</li>
+          </ul>
+        </div>
       </main>
 
       <footer>
