@@ -72,7 +72,8 @@ h1 {
   user-select: none; /* Prevents the blue highlight box when clicking */
 }
 .theme-toggle img[src="/sun.png"] {
-  filter: brightness(1.75);
+  /* Make the sun icon pop in dark mode */
+  filter: brightness(3) saturate(2);
 }
 
 .theme-toggle:hover img {
